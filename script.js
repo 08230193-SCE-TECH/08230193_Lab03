@@ -251,6 +251,25 @@ document.addEventListener('DOMContentLoaded', () => {
             entry.target.classList.add('in');
             observer.unobserve(entry.target);
         });
-    }, { threshold: 0.18 });
-    [...fadeUpTargets, ...scaleInTargets].forEach(el => observer.observe(el));
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+
+    const revealIfVisible = (el) => {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.top < vh * 0.92 && rect.bottom > 0) {
+            el.classList.add('in');
+            observer.unobserve(el);
+        }
+    };
+
+    const targets = [...fadeUpTargets, ...scaleInTargets];
+    targets.forEach(el => {
+        observer.observe(el);
+        revealIfVisible(el); // immediate check for items already in view
+    });
+
+    window.addEventListener('load', () => {
+        targets.forEach(revealIfVisible);
+        setTimeout(() => targets.forEach(revealIfVisible), 150); // nudge after layout settles
+    });
 });
