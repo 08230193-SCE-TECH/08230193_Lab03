@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Sonam Choden</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="opacity:0;">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Sonam Choden</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <button class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    </nav>
+
+    <!-- Projects Section -->
+    <section class="section projects-section">
+        <h2>Projects</h2>
+        <div class="filter-buttons" id="project-filters">
+            <button data-filter="all" class="filter-btn active">All</button>
+            <button data-filter="web" class="filter-btn">Web</button>
+            <button data-filter="database" class="filter-btn">Database</button>
+            <button data-filter="pbl" class="filter-btn">PBL</button>
+        </div>
+
+        <div class="projects-grid" id="projects-grid">
+            <div class="project-card" data-category="web">
+                <img src="download.jpeg" alt="Online Resources Project">
+                <h3>Online Resources</h3>
+                <p>A user-friendly website to access learning materials. Focused on web design, layout, and responsive design principles.</p>
+                <div class="project-desc">Responsive site with accessible UI and clean layout.</div>
+            </div>
+            <div class="project-card" data-category="database">
+                <img src="images.jpeg" alt="Lost Belonging Portal">
+                <h3>Lost Belonging Portal</h3>
+                <p>Database-driven web application for managing lost & found items. Enhanced skills in SQL, ER diagrams, and web design.</p>
+                <div class="project-desc">CRUD features with SQL backend and ER-modeled schema.</div>
+            </div>
+            <div class="project-card" data-category="pbl">
+                <img src="download.png" alt="Problem Based Learning Project">
+                <h3>Problem-Based Learning (PBL)</h3>
+                <p>Engaged in collaborative PBL activities solving real-life classroom challenges using ICT tools.</p>
+                <div class="project-desc">Team-based solution prototyping and iterative feedback.</div>
+            </div>
+        </div>
+        <!-- Floating Social Sidebar -->
+        <div class="social-sidebar">
+            <a href="https://www.facebook.com/s.m.chodey" target="_blank" aria-label="Facebook" title="Facebook">
+                <img src="https://cdn-icons-png.flaticon.com/128/733/733547.png" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/_cho_edey_?igsh=MTZzdDVwaGgxdzVocA" target="_blank" aria-label="Instagram" title="Instagram">
+                <img src="https://cdn-icons-png.flaticon.com/128/2111/2111463.png" alt="Instagram">
+            </a>
+            <a href="https://x.com/so_chodeyyy" target="_blank" aria-label="Twitter" title="Twitter">
+            <img src="https://cdn-icons-png.flaticon.com/128/733/733579.png" alt="Twitter">
+              
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p id="footer-text">&copy; 2025 Sonam Choden | All Rights Reserved • <span id="footer-clock"></span></p>
+    </footer>
+    <script src="script.js"></script>
+
+</body>
+</html>
