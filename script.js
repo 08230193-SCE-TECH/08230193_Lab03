@@ -1,4 +1,69 @@
+// ---- Beautiful text reveal helpers ----
+function ensureRevealStyles() {
+    if (document.getElementById('reveal-text-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'reveal-text-styles';
+    style.textContent = `
+    .reveal-char, .reveal-word { display:inline-block; opacity:0; transform: translateY(0.6em); filter: blur(4px); transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease; }
+    .reveal-char.in, .reveal-word.in { opacity:1; transform: translateY(0); filter: blur(0); }
+    .js-reveal-letters .reveal-char.in { text-shadow: 0 0 6px rgba(255,110,199,0.3), 0 0 10px rgba(0,255,255,0.25); }
+    @media (prefers-reduced-motion: reduce) {
+        .reveal-char, .reveal-word { transition: none; transform: none; filter: none; opacity: 1; }
+    }
+    `;
+    document.head.appendChild(style);
+}
+
+// Simple fade-in styles (whole element)
+function ensureFadeStyles() {
+    if (document.getElementById('fade-text-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'fade-text-styles';
+    style.textContent = `
+    .js-fade-in { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .js-fade-in.in { opacity: 1; transform: none; }
+    `;
+    document.head.appendChild(style);
+}
+
+function splitToSpans(el, type) {
+    if (!el || el.dataset.revealed) return;
+    const text = el.textContent;
+    el.textContent = '';
+    const units = type === 'letters' ? [...text] : text.split(/(\s+)/);
+    units.forEach((unit, i) => {
+        const span = document.createElement('span');
+        const isSpace = /^\s+$/.test(unit);
+        span.className = type === 'letters' ? 'reveal-char' : 'reveal-word';
+        if (isSpace) {
+            span.textContent = unit;
+            span.style.display = 'inline';
+        } else {
+            span.textContent = unit;
+            span.style.transitionDelay = `${i * (type === 'letters' ? 25 : 40)}ms`;
+        }
+        el.appendChild(span);
+    });
+    el.dataset.revealed = '1';
+}
+
+function revealOnView(nodes, type) {
+    if (!nodes || !nodes.length) return;
+    nodes.forEach(el => splitToSpans(el, type));
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.querySelectorAll(type === 'letters' ? '.reveal-char' : '.reveal-word')
+                .forEach(s => s.classList.add('in'));
+            io.unobserve(entry.target);
+        });
+    }, { threshold: 0.25 });
+    nodes.forEach(n => io.observe(n));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    ensureRevealStyles();
+    ensureFadeStyles();
     // Page fade-in
     document.body.style.opacity = '1';
 
@@ -166,4 +231,26 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => img.style.transform = '', 300);
         });
     });
+
+    // ---------------- Text appearance: switch to whole-element fade-in ----------------
+    // Only run letter/word reveals if elements explicitly request it via classes.
+    const letterTargets = document.querySelectorAll('.js-reveal-letters');
+    const wordTargets = document.querySelectorAll('.js-reveal-words');
+    if (letterTargets.length) revealOnView(letterTargets, 'letters');
+    if (wordTargets.length) revealOnView(wordTargets, 'words');
+
+    // Default: fade-in About paragraph, Education description/cards, section titles, and project descriptions
+    const fadeUpTargets = document.querySelectorAll('.about-section p, .education-description, .edu-card p, .section h2, .project-card p');
+    fadeUpTargets.forEach(el => el.classList.add('aos-fade-up'));
+    const scaleInTargets = document.querySelectorAll('.skill-card, .project-card');
+    scaleInTargets.forEach(el => el.classList.add('aos-scale-in'));
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0.18 });
+    [...fadeUpTargets, ...scaleInTargets].forEach(el => observer.observe(el));
 });
